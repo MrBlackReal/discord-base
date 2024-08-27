@@ -1,0 +1,5 @@
+{
+    "commands.utility.ping": "Pong!",
+    "commands.utility.server": "Dieser Server heißt {0} und hat {1} Mitglieder.",
+    "commands.utility.user": "Dieser Befehl wurde von {0} ausgeführt, der am {1} beigetreten ist."
+}
