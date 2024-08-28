@@ -1,10 +1,11 @@
+import { log } from "console";
 import { EventHandler, Events } from "discord.js";
 
 const event: EventHandler = {
     event: Events.ClientReady,
-    once: false,
-    async execute(client) {
-        console.log(`Bot Ready! Logged in as ${client.user.tag}`)
+    once: true,
+    execute(client) {
+        log(`Bot Ready! Logged in as ${client.user.tag}`)
     },
 };
 

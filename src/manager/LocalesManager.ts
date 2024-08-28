@@ -16,14 +16,14 @@ class LocalesManager {
         const localesPath = path.join(__dirname, '../locales');
         const files = fs.readdirSync(localesPath).filter(file => file.endsWith('.json'));
 
+        log("Loading locales...");
+
         files.forEach(file => {
             const locale = file.split('-')[0];
             const filePath = path.join(localesPath, file);
 
             try {
                 this.locales[locale] = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Locale;
-
-                log(`Loaded: ${file}`)
             } catch (error) {
                 console.error(`Invalid locale file: ${file}`);
             }
