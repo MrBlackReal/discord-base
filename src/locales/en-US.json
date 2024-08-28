@@ -1,5 +1,9 @@
 {
-    "commands.utility.ping": "Pong!",
-    "commands.utility.server": "This server is called {0} and has {1} members.",
-    "commands.utility.user": "This command was run by {0}, who joined on {1}."
+    "commands": {
+        "utility": {
+            "ping": "Pong!",
+            "server": "This server is called {0} and has {1} members.",
+            "user": "This command was run by {0}, who created his account on {1}."
+        }
+    }
 }

@@ -1,6 +1,5 @@
 import path from "node:path";
 import fs from "node:fs";
-import { log } from "node:console";
 import { Locale } from "../types/locale";
 
 class LocalesManager {
@@ -12,24 +11,24 @@ class LocalesManager {
         this.loadLocales();
     }
 
-    loadLocales() {
-        const localesDir = path.join(__dirname, "..", "locales");
-        const localesFiles = fs.readdirSync(localesDir).filter(file => file.endsWith(".json"));
+    private loadLocales() {
+        const localesPath = path.join(__dirname, '../locales');
+        const files = fs.readdirSync(localesPath).filter(file => file.endsWith('.json'));
 
-        localesFiles.forEach(file => {
-            log("Loading " + file.split(".")[0] + "...")
+        files.forEach(file => {
+            const locale = file.split('-')[0];
+            const filePath = path.join(localesPath, file);
 
-            const locale = file.split("-")[0];
-            const fp = path.join(localesDir, file);
-            this.locales[locale] = require(fp);
+            try {
+                this.locales[locale] = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Locale;
+            } catch (error) {
+                console.error(`Invalid locale file: ${file}`);
+            }
         });
     }
 
-    getTranslation(locale: string, key: string) {
-        if (!this.locales[locale])
-            locale = this.defaultLocale;
-
-        return this.locales[locale][key] || this.locales[this.defaultLocale][key] || key;
+    public getLocale(locale: string): Locale {
+        return this.locales[locale] || this.locales[this.defaultLocale];
     }
 }
 

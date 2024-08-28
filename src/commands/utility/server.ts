@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, Command } from 'discord.js';
+import { SlashCommandBuilder, Command, ChatInputCommandInteraction } from 'discord.js';
 import { insertParams } from "../../utils/locale";
 import localesManager from "../../manager/LocalesManager";
 
@@ -8,11 +8,11 @@ const command: Command = {
 		.setDescription('Provides information about the server.'),
 	async execute(action: ChatInputCommandInteraction) {
 		const locale = action.locale;
-		const translation = localesManager.getTranslation(locale, "commands.utility.server");
-		const res = insertParams(translation, action.guild?.name, action.guild?.memberCount);
+		const translation = localesManager.getLocale(locale);
+		const res = insertParams(translation.commands.utility.server, action.guild?.name, action.guild?.memberCount);
 
 		await action.reply(res);
-	},
+	}
 };
 
 export default command;

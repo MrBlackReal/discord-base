@@ -8,8 +8,8 @@ const command: Command = {
 		.setDescription('Provides information about the user.'),
 	async execute(action: ChatInputCommandInteraction) {
 		const locale = action.locale;
-		const translation = localesManager.getTranslation(locale, "commands.utility.user");
-		const res = insertParams(translation, action.user.username, action.user.createdTimestamp);
+		const translation = localesManager.getLocale(locale);
+		const res = insertParams(translation.commands.utility.user, action.user.username, action.user.createdAt.toLocaleDateString(locale));
 
 		await action.reply(res);
 	},

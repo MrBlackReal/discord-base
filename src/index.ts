@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, Collection, REST, Routes, Command, ChatInputCommandInteraction } from "discord.js";
+import { Client, Events, GatewayIntentBits, Collection, REST, Routes, Command, Locale } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
 import dotenv from "dotenv";
