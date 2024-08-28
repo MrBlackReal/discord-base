@@ -1,6 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import { Locale } from "../types/locale";
+import { log } from "console";
 
 class LocalesManager {
     public readonly defaultLocale: string;
@@ -21,6 +22,8 @@ class LocalesManager {
 
             try {
                 this.locales[locale] = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Locale;
+
+                log(`Loaded: ${file}`)
             } catch (error) {
                 console.error(`Invalid locale file: ${file}`);
             }
@@ -32,4 +35,4 @@ class LocalesManager {
     }
 }
 
-export = new LocalesManager("en");
+export default new LocalesManager("en");

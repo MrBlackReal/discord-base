@@ -1,7 +1,8 @@
-import { Client, Events, GatewayIntentBits, Collection, REST, Routes, Command, Locale } from "discord.js";
+import { Client, Events, GatewayIntentBits, Collection, REST, Routes, Command, Locale, EventHandler } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
 import dotenv from "dotenv";
+import EventManager from "./manager/EventManager";
 
 dotenv.config();
 
@@ -11,6 +12,10 @@ const clientId = process.env.BOT_ID || "id";
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection<string, Command>();
+client.events = new Collection<string, EventHandler>();
+
+const eventManager = new EventManager();
+eventManager.registerEvents(client);
 
 const foldersPath = path.join(__dirname, "commands");
 const commandFolders = fs.readdirSync(foldersPath);
@@ -51,31 +56,5 @@ const rest = new REST().setToken(token);
         console.error(error);
     }
 })();
-
-client.once(Events.ClientReady, c => console.log(`Bot Ready! Logged in as ${c.user.tag}`));
-
-client.on(Events.InteractionCreate, async action => {
-    if (!action.isChatInputCommand())
-        return;
-
-    const cmd = action.client.commands.get(action.commandName);
-
-    if (!cmd) {
-        console.error(`No command matching ${action.commandName} was found.`);
-        return;
-    }
-
-    try {
-        await cmd.execute(action);
-    } catch (err) {
-        console.error(err);
-
-        if (action.replied || action.deferred) {
-            await action.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-        } else {
-            await action.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
-    }
-});
 
 client.login(token);
