@@ -1,9 +1,8 @@
-import { Client, GatewayIntentBits, Collection, REST, Routes, Command, EventHandler } from "discord.js";
-import fs from "node:fs";
-import path from "node:path";
+import { Client, GatewayIntentBits, Collection, REST, Command, EventHandler } from "discord.js";
 import dotenv from "dotenv";
 import EventManager from "./manager/EventManager";
 import CommandManager from "./manager/CommandManager";
+import WebServerManager from "./manager/WebServerManager";
 
 dotenv.config();
 
@@ -16,10 +15,8 @@ client.commands = new Collection<string, Command>();
 client.events = new Collection<string, EventHandler>();
 client.rest = new REST().setToken(token);
 
-const commandManager = new CommandManager(client);
-commandManager.registerCommands();
-
-const eventManager = new EventManager(client);
-eventManager.registerEvents();
+CommandManager.registerCommands(client);
+EventManager.registerEvents(client);
+WebServerManager.start(client);
 
 client.login(token);

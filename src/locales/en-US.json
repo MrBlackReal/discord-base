@@ -4,6 +4,7 @@
             "ping": "Pong!",
             "server": "This server is called {0} and has {1} members.",
             "user": "This command was run by {0}, who created his account on {1}."
-        }
+        },
+        "error": "There was an error while executing this command!"
     }
 }

@@ -4,6 +4,7 @@
             "ping": "Pong!",
             "server": "Dieser Server heißt {0} und hat {1} Mitglieder.",
             "user": "Dieser Befehl wurde von {0} ausgeführt, der am {1} sein Konto erstellt hat."
-        }
+        },
+        "error": "Beim Ausführen dieses Befehls ist ein Fehler aufgetreten!"
     }
 }

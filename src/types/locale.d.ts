@@ -5,10 +5,6 @@ export interface Locale {
             server: string;
             user: string;
         };
+        error: string;
     };
 };
-
-export function insertParams(msg: string, ...params: any[]) {
-	params.forEach((param, index) => msg = msg.replace(new RegExp(`\\{${index}\\}`, 'g'), param));
-	return msg;
-}

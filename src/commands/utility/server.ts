@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, Command, ChatInputCommandInteraction } from 'discord.js';
-import { insertParams } from "../../utils/locale";
+import { insertParams } from "../../utils/StringUtils";
 import localesManager from "../../manager/LocalesManager";
 
 const command: Command = {

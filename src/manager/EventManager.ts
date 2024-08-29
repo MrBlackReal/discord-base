@@ -1,36 +1,38 @@
-import { Client, EventHandler, Events } from "discord.js";
-import { log } from "console";
+import { Client, EventHandler } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
+import Logger from "../utils/Logger";
 
 class EventManager {
-    private readonly client: Client;
     public readonly eventFolder: string;
 
-    constructor(client: Client) {
-        this.client = client;
+    constructor() {
         this.eventFolder = path.join(__dirname, "..", "events");
     }
 
-    public registerEvents(): void {
+    public registerEvents(client: Client): void {
         const eventFiles = fs.readdirSync(this.eventFolder).filter(file => file.endsWith(".js"));
 
-        log("Registering events...");
+        Logger.info("Registering events...");
 
         for (const file of eventFiles) {
             const filePath = path.join(this.eventFolder, file);
             const eventHandler: EventHandler = require(filePath).default;
 
             if ('event' in eventHandler && 'once' in eventHandler && 'execute' in eventHandler) {
-                this.client.events.set(eventHandler.event, eventHandler);
+                client.events.set(eventHandler.event, eventHandler);
 
-                if (eventHandler.once) this.client.once(eventHandler.event, (...args) => eventHandler.execute(...args));
-                else this.client.on(eventHandler.event, (...args) => eventHandler.execute(...args));
+                if (eventHandler.once) {
+                    client.once(eventHandler.event, (...args) => eventHandler.execute(...args));
+                }
+                else {
+                    client.on(eventHandler.event, (...args) => eventHandler.execute(...args));
+                }
             } else {
-                console.log(`[WARNING] The event at ${filePath} is missing a required property.`);
+                Logger.warn(`[WARNING] The event at ${filePath} is missing a required property.`);
             }
         }
     }
 };
 
-export default EventManager;
+export default new EventManager();

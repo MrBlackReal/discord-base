@@ -1,7 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import { Locale } from "../types/locale";
-import { log } from "console";
+import Logger from "../utils/Logger";
 
 class LocalesManager {
     public readonly defaultLocale: string;
@@ -16,7 +16,7 @@ class LocalesManager {
         const localesPath = path.join(__dirname, '../locales');
         const files = fs.readdirSync(localesPath).filter(file => file.endsWith('.json'));
 
-        log("Loading locales...");
+        Logger.info("Loading locales...");
 
         files.forEach(file => {
             const locale = file.split('-')[0];
@@ -25,7 +25,8 @@ class LocalesManager {
             try {
                 this.locales[locale] = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Locale;
             } catch (error) {
-                console.error(`Invalid locale file: ${file}`);
+                Logger.error(error)
+                Logger.error(`Invalid locale file: ${file}`);
             }
         });
     }
