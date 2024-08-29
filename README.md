@@ -10,9 +10,9 @@ This project is a base framework for developing Discord bots using TypeScript. I
 
 ## Installation
 
-1. Clone this repository:
+1. Clone this repository or download the zip:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/MrBlackReal/discord-base.git
     ```
 2. Navigate to the project directory:
     ```bash
