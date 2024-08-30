@@ -1,15 +1,16 @@
 import { Client, Collection, Events, REST } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { Logger } from '../utils/Logger';
 
 declare module 'discord.js' {
   interface Client {
     commands: Collection<string, Command>;
     events: Collection<string, EventHandler>;
-    rest: REST
+    logger: Logger
+    // rest: REST
   }
 
   interface Command {
-    data: SlashCommandBuilder;
+    data: any;
     autocomplete?(interaction: AutocompleteInteraction): Promise<void>;
     execute(interaction: Interaction): Promise<void>;
   }

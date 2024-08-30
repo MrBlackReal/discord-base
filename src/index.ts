@@ -1,22 +1,23 @@
-import { Client, GatewayIntentBits, Collection, REST, Command, EventHandler } from "discord.js";
+import { ShardingManager } from "discord.js";
 import dotenv from "dotenv";
-import EventManager from "./manager/EventManager";
-import CommandManager from "./manager/CommandManager";
+import Logger from "./utils/Logger";
 import WebServerManager from "./manager/WebServerManager";
+import path from "node:path";
 
 dotenv.config();
 
-const token = process.env.BOT_TOKEN || "token";
-export const clientId = process.env.BOT_ID || "id";
+export const token: string = process.env.BOT_TOKEN || "token";
+export const clientId: string = process.env.BOT_ID || "id";
+export const port: number = Number(process.env.PORT) || 1337;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+export const manager: ShardingManager = new ShardingManager(path.join(__dirname, "bot.js"), {
+	shardArgs: ['--ansi', '--color'],
+    token: token,
+    totalShards: "auto"
+});
 
-client.commands = new Collection<string, Command>();
-client.events = new Collection<string, EventHandler>();
-client.rest = new REST().setToken(token);
+WebServerManager.start(manager, port);
 
-CommandManager.registerCommands(client);
-EventManager.registerEvents(client);
-WebServerManager.start(client);
+manager.on("shardCreate", shard => Logger.info("Launched new Shard with id {0}", shard.id));
 
-client.login(token);
+manager.spawn().catch(err => Logger.error("Error while Sharding: {0}", err.statusText));

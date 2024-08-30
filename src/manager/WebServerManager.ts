@@ -1,49 +1,55 @@
-import { Client } from "discord.js";
+import { ShardingManager } from "discord.js";
 import express, { Request, Response } from "express";
 import path from "node:path";
-import Logger from "../utils/Logger";
+import { Logger } from "../utils/Logger";
+import { startPresenceUpdateTimer, stopPresenceUpdateTimer } from "../events/ClientReady";
 
 class WebServerManager {
-    private app = express();
-    private port = process.env.PORT || 1337;
 
-    private setupRoutes(client: Client) {
+    private readonly app = express();
+    private readonly logger = new Logger("Web Socket");
+
+    private setupRoutes(manager: ShardingManager) {
         this.app.use(express.static(path.join(__dirname, '../../public')));
 
         this.app.post('/bot/status', async (req: Request, res: Response) => {
-            if (client.token != null) {
-                return res.send("Running");
-            }
-            else {
-                return res.send("Stopped");
-            }
+            return res.send("status")
         });
 
         this.app.post('/bot/start', async (req: Request, res: Response) => {
-            if (client.token != null)
-                return res.send("Already Running");
-
-            await client.login(process.env.BOT_TOKEN);
-            return res.send('Bot gestartet');
+            return res.send("start")
         });
 
         this.app.post('/bot/stop', async (req: Request, res: Response) => {
-            if (client) {
-                if (client.user) {
-                    client.user.setPresence({ status: "invisible" });
-                }
-
-                client.destroy();
-                return res.send('Stopped');
-            } else {
-                return res.send('Already Stopped');
-            }
+            return res.send("stop")
         });
     }
 
-    public start(client: Client) {
-        this.setupRoutes(client);
-        this.app.listen(this.port, () => Logger.info(`Running Web Server -> http://localhost:{0}`, this.port));
+    public start(manager: ShardingManager, port: number) {
+        /*this.setupRoutes(manager);
+        
+        try {
+            this.app.listen(port, () => this.logger.info(`Running Web Server -> http://localhost:{0}`, port));
+        } catch (error) {
+            console.error(error);
+        }*/
+
+        this.setupRoutes(manager);
+
+        const attemptListen = (port: number) => {
+            this.app.listen(port, () => {
+                this.logger.info(`Running Web Server -> http://localhost:${port}`);
+            }).on('error', (err: NodeJS.ErrnoException) => {
+                if (err.code === 'EADDRINUSE') {
+                    this.logger.error(`Port ${port} is already in use. Trying another port...`);
+                    attemptListen(port + 1);  // Try the next port
+                } else {
+                    console.error(err);
+                }
+            });
+        };
+
+        attemptListen(port);
     }
 }
 

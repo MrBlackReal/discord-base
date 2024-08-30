@@ -1,7 +1,6 @@
 import { Client, EventHandler } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
-import Logger from "../utils/Logger";
 
 class EventManager {
     public readonly eventFolder: string;
@@ -13,7 +12,7 @@ class EventManager {
     public registerEvents(client: Client): void {
         const eventFiles = fs.readdirSync(this.eventFolder).filter(file => file.endsWith(".js"));
 
-        Logger.info("Registering events...");
+        client.logger.info("Registering events...");
 
         for (const file of eventFiles) {
             const filePath = path.join(this.eventFolder, file);
@@ -29,7 +28,7 @@ class EventManager {
                     client.on(eventHandler.event, (...args) => eventHandler.execute(...args));
                 }
             } else {
-                Logger.warn(`[WARNING] The event at ${filePath} is missing a required property.`);
+                client.logger.warn(`[WARNING] The event at ${filePath} is missing a required property.`);
             }
         }
     }

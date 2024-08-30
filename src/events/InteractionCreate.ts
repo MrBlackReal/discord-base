@@ -1,4 +1,5 @@
 import { EventHandler, Events } from "discord.js";
+import LocalesManager from "../manager/LocalesManager";
 
 const event: EventHandler = {
     event: Events.InteractionCreate,
@@ -19,10 +20,13 @@ const event: EventHandler = {
         } catch (err) {
             console.error(err);
     
+            const locale = LocalesManager.getLocale(action.locale);
+            const msg = locale.commands.error;
+
             if (action.replied || action.deferred) {
-                await action.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+                await action.followUp({ content: msg, ephemeral: true });
             } else {
-                await action.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                await action.reply({ content: msg, ephemeral: true });
             }
         }
     },

@@ -2,7 +2,6 @@ import { Client, Command, Routes } from "discord.js";
 import path from "node:path";
 import fs from "node:fs";
 import { clientId } from "..";
-import Logger from "../utils/Logger";
 
 class CommandManager {
     private readonly foldersPath: string;
@@ -14,7 +13,7 @@ class CommandManager {
     public registerCommands(client: Client): void {
         const commandFolders = fs.readdirSync(this.foldersPath);
 
-        Logger.info("Registering commands...");
+        client.logger.info("Registering commands...");
 
         for (const folder of commandFolders) {
             const commandsPath = path.join(this.foldersPath, folder);
@@ -27,7 +26,7 @@ class CommandManager {
                 if ('data' in command && 'execute' in command) {
                     client.commands.set(command.data.name, command);
                 } else {
-                    Logger.warn(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+                    client.logger.warn(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
                 }
             }
         }
