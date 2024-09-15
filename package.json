@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist/ && tsc",
     "copy-locales": "rm -rf dist/locales/ && cp -r src/locales dist/",
     "start": "npm-run-all build copy-locales && node dist/index.js"
   },
