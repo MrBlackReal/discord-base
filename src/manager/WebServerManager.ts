@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
 import express, { Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 import path from "node:path";
 import Logger from "../utils/Logger";
 
@@ -8,7 +9,10 @@ class WebServerManager {
     private port = process.env.PORT || 1337;
 
     private setupRoutes(client: Client) {
+        const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+    
         this.app.use(express.static(path.join(__dirname, '../../public')));
+        this.app.use(limiter)
 
         this.app.post('/bot/status', async (req: Request, res: Response) => {
             if (client.token != null) {
