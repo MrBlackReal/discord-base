@@ -16,7 +16,7 @@ This project is a base framework for developing Discord bots using TypeScript. I
     ```
 2. Navigate to the project directory:
     ```bash
-    cd discord-bot-base
+    cd discord-base
     ```
 3. Install the necessary dependencies:
     ```bash
