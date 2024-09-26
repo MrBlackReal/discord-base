@@ -22,7 +22,10 @@ This project is a base framework for developing Discord bots using TypeScript. I
     ```bash
     npm install
     ```
-4. Start the bot:
+4. Setup env variables:
+   Create a new ".env" file and [configure](#Configuration) it.
+    
+6. Start the bot:
     ```bash
     npm run start
     ```
@@ -32,8 +35,10 @@ This project is a base framework for developing Discord bots using TypeScript. I
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-BOT_TOKEN="your-bot-token"
-BOT_ID="your-bot-id"
+BOT_TOKEN="bot token"
+BOT_ID="bot id"
+GUILD_ID="test guild id"
+PORT="socket port"
 ```
 
 Additional configuration can be added to the .env file as needed.
